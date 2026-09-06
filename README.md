@@ -16,7 +16,8 @@ Network → Settings → Internet → **WAN1 (Port 5)**
    - DHCPv6 にしてはいけない。この HGW は IA_NA を返さないため、
      WAN にグローバル IPv6 が付かず `ubnt-hb46pp` が**無言でハングする**
      （`select_preferred_addresses` の `sleep 1` 無限ループ。ログも出ない）
-   - Prefix Delegation を使う場合はサイズ 60 を指定。SLAAC でも PD 要求は止まらない
+   - Prefix Delegation を使う場合、サイズは上流の構成で変わる。**ONU に直結なら 56、
+     HGW を経由するなら 60**。SLAAC でも PD 要求は止まらない
 2. **IPv4 Connection = IPv4 over IPv6 → MAP-E → v6 Plus**
    - これで `eth4.ipv6.hb46pp = {capability:"map_e_jpix", enabled:true}` が生成される
    - 動的 MAP-E として一度通ることを確認してから次へ進む
@@ -115,7 +116,7 @@ BR アドレスだけは JPIX 共通の実値です。
 - serverName : `IID|IPv6_Remote|IPv4_Address|IPv4_Prefix_Length`（4分割・空要素不可）
 
 トンネルのローカル端点は **WAN の /64 + 契約 IID** で合成される。
-PD で受け取る `/60` はトンネルに一切関与しない（LAN 配布用）。
+PD で受け取るプレフィックス（`/56` または `/60`）はトンネルに一切関与しない（LAN 配布用）。
 
 計算だけ手元で確かめる（副作用なし）:
 
