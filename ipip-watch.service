@@ -1,0 +1,12 @@
+[Unit]
+Description=Restore v6plus fixed IP (ipip_jpix) after UniFi reverts it
+After=ubios-udapi-server.service
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /data/ipip/watch.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
