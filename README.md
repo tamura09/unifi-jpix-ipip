@@ -1,7 +1,12 @@
 # v6プラス固定IP (JPIX) を UniFi UCG-Fiber で終端する手順
 
-UniFi OS 5.1.31 / UCG-Fiber で確認。UI に無い内部 capability `ipip_jpix` を直接使う **非公式** の方法。
-FW 更新で壊れる可能性があり、サポート対象外になり得る。
+UniFi OS 5.1.31 と 6.0.7 / UCG-Fiber で確認。UI に無い内部 capability `ipip_jpix` を直接使う
+**非公式** の方法。FW 更新で壊れる可能性があり、サポート対象外になり得る。
+
+6.0.7 への更新では `/usr/bin/ubnt-hb46pp` と `ubnt_hb46pp_calc.py` が置き換わったが、
+`ipip_jpix` のサポートと検証条件は変わらず、state の構造も互換だったのでスクリプトは
+そのまま動いた。`/data/ipip` と `/etc/systemd/system/ipip-watch.service` も残った
+（消えることはあるので、watcher が居なくなったら `install-watch.sh` を再実行する）。
 
 - 対象ポート: **Port 5 = eth4**（`config.env` の `WAN_IF`）
 - 契約値: `config.env`（chmod 600）
@@ -114,6 +119,13 @@ BR アドレスだけは JPIX 共通の実値です。
 
 - username / password : `^[A-Za-z0-9]{1,20}$`
 - serverName : `IID|IPv6_Remote|IPv4_Address|IPv4_Prefix_Length`（4分割・空要素不可）
+
+同じファイルが `map_e_ntt` と `ipip_internet_multifeed`（transix）も扱う。検証条件は
+capability ごとに違うので、JPIX 以外を試すなら該当の分岐を読むこと
+（`ipip_internet_multifeed` は username が `^u[0-9]{10}$`、password が8文字固定）。
+
+UI 側の選択肢は `map-e` / `map-e,jpix` / `map-e,ntt` / `ipip` で、6.0.7 時点でも
+`ipip_jpix` を直接選ぶ項目は無い。
 
 トンネルのローカル端点は **WAN の /64 + 契約 IID** で合成される。
 PD で受け取るプレフィックス（`/56` または `/60`）はトンネルに一切関与しない（LAN 配布用）。
