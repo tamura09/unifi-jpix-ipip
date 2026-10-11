@@ -1,5 +1,12 @@
 # v6プラス固定IP (JPIX) を UniFi UCG-Fiber で終端する手順
 
+> [!IMPORTANT]
+> **UniFi Network Application 11 以降は v6プラス固定IP (JPIX IPIP) に公式対応した。**
+> 11 以降では UI から設定でき、このリポジトリのスクリプトは不要。
+> watcher を入れている場合は、公式の設定と干渉しないよう、切り替える前に手順 4 で撤去すること。
+>
+> 以下は Network Application 10.x 以前向けの記録として残している。
+
 UniFi OS 5.1.31 と 6.0.7 / UCG-Fiber で確認。UI に無い内部 capability `ipip_jpix` を直接使う
 **非公式** の方法。FW 更新で壊れる可能性があり、サポート対象外になり得る。
 
